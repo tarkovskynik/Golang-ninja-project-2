@@ -20,7 +20,6 @@ func TestUser_Create(t *testing.T) {
 	user := &domain.User{
 		Email:     randomString(5) + "@email.com",
 		Password:  randomString(10),
-		Token:     randomString(15),
 		CreatedAt: time.Now(),
 	}
 
@@ -31,7 +30,6 @@ func TestUser_GetByEmailAndPassword(t *testing.T) {
 	user := &domain.User{
 		Email:     randomString(5) + "@email.com",
 		Password:  randomString(10),
-		Token:     randomString(15),
 		CreatedAt: time.Now(),
 	}
 
@@ -42,7 +40,6 @@ func TestUser_GetByEmailAndPassword(t *testing.T) {
 	require.NotEmpty(t, findUser)
 
 	require.Equal(t, user.Email, findUser.Email)
-	require.Equal(t, user.Token, findUser.Token)
 	require.Equal(t, user.Password, findUser.Password)
 	//require.Equal(t, user.CreatedAt, findUser.CreatedAt) // TODO fix check time variable
 }
@@ -51,7 +48,6 @@ func TestUser_DeleteByEmail(t *testing.T) {
 	user := &domain.User{
 		Email:     randomString(5) + "@email.com",
 		Password:  randomString(10),
-		Token:     randomString(15),
 		CreatedAt: time.Now(),
 	}
 
@@ -69,7 +65,6 @@ func TestUser_UpdateByEmail(t *testing.T) {
 	user := &domain.User{
 		Email:     randomString(5) + "@email.com",
 		Password:  randomString(10),
-		Token:     randomString(15),
 		CreatedAt: time.Now(),
 	}
 
@@ -78,7 +73,6 @@ func TestUser_UpdateByEmail(t *testing.T) {
 	updateUser := &domain.User{
 		Email:     user.Email,
 		Password:  randomString(10),
-		Token:     randomString(15),
 		CreatedAt: time.Now(),
 	}
 
@@ -89,7 +83,6 @@ func TestUser_UpdateByEmail(t *testing.T) {
 	require.NoError(t, err)
 
 	require.Equal(t, updateUser.Email, findUser.Email)
-	require.Equal(t, updateUser.Token, findUser.Token)
 	require.Equal(t, updateUser.Password, findUser.Password)
 	//require.Equal(t, updateUser.CreatedAt, findUser.CreatedAt) // TODO fix check time variable
 }

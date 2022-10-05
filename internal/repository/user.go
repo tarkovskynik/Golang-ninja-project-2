@@ -2,15 +2,10 @@ package repository
 
 import (
 	"context"
-	"errors"
 
 	"github.com/tarkovskynik/Golang-ninja-project-2/internal/domain"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-)
-
-var (
-	NotFoundUser = errors.New("user doesn't exist by mail")
 )
 
 type UserInterface interface {
@@ -41,36 +36,37 @@ func (u *User) Create(ctx context.Context, user *domain.User) error {
 }
 
 func (u *User) GetByEmailAndPassword(ctx context.Context, email, password string) (*domain.User, error) {
-	result := u.con.Collection(u.userCollection).FindOne(ctx, bson.M{"email": email, "password": password})
-	if result.Err() != nil {
-		return nil, result.Err()
-	}
-
+	filter := bson.M{"email": email, "password": password}
 	var user domain.User
-	err := result.Decode(&user)
+	err := u.con.Collection(u.userCollection).FindOne(ctx, filter).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
 
 	return &user, err
 }
 
 func (u *User) UpdateByEmail(ctx context.Context, email string, user *domain.User) error {
-	result, err := u.con.Collection(u.userCollection).UpdateOne(ctx, bson.M{"email": email}, bson.M{"$set": user})
+	filter := bson.M{"email": email}
+	update := bson.M{"$set": user}
+	queryResult, err := u.con.Collection(u.userCollection).UpdateOne(ctx, filter, update)
 	if err != nil {
 		return err
 	}
-	if result.ModifiedCount == 0 {
-		return NotFoundUser
+	if queryResult.ModifiedCount == 0 {
+		return domain.NotFoundUser
 	}
 
 	return nil
 }
 
 func (u *User) DeleteByEmail(ctx context.Context, email string) error {
-	result, err := u.con.Collection(u.userCollection).DeleteOne(ctx, bson.M{"email": email})
+	queryResult, err := u.con.Collection(u.userCollection).DeleteOne(ctx, bson.M{"email": email})
 	if err != nil {
 		return err
 	}
-	if result.DeletedCount == 0 {
-		return NotFoundUser
+	if queryResult.DeletedCount == 0 {
+		return domain.NotFoundUser
 	}
 
 	return nil
