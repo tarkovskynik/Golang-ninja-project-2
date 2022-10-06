@@ -5,6 +5,7 @@ import (
 
 	"github.com/tarkovskynik/Golang-ninja-project-2/internal/domain"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -28,7 +29,7 @@ func (f *File) Create(ctx context.Context, file domain.File) error {
 	return nil
 }
 
-func (f *File) List(ctx context.Context, userID int) ([]domain.File, error) {
+func (f *File) List(ctx context.Context, userID primitive.ObjectID) ([]domain.File, error) {
 	filter := bson.D{{Key: "user_id", Value: userID}}
 
 	cur, err := f.con.Collection(f.fileCollection).Find(ctx, filter)

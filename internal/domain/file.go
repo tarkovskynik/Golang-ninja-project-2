@@ -1,11 +1,15 @@
 package domain
 
-import "time"
+import (
+	"time"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
 
 type File struct {
-	ID       int       `json:"id"        bson:"id"`
-	UserID   int       `json:"user_id"   bson:"user_id"`
-	URL      string    `json:"url"       bson:"url"`
-	Size     int       `json:"size"      bson:"size"`
-	LoadedAt time.Time `json:"loaded_at" bson:"loaded_at"`
+	ID       primitive.ObjectID `json:"id"        bson:"_id,omitempty"`
+	UserID   primitive.ObjectID `json:"user_id"   bson:"user_id"`
+	URL      string             `json:"url"       bson:"url"`
+	Size     uint64             `json:"size"      bson:"size"`
+	LoadedAt time.Time          `json:"loaded_at" bson:"loaded_at"`
 }
